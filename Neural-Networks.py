@@ -25,3 +25,11 @@ class Neural_Network(object):
     def sigmoid(self, z):
         # Apply sigmoid activation function to scalar, vector, or matrix
         return 1/(1+np.exp(-z))
+
+    def forward(self, X):
+        # Propagate inputs through network
+        self.z2 = np.dot(self.W1, X)
+        self.a2 = self.sigmoid(self.z2)
+        self.z3 = np.dot(self.W2, self.a2)
+        yHat = self.sigmoid(self.z3)
+        return yHat
