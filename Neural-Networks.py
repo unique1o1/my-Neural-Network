@@ -21,3 +21,7 @@ class Neural_Network(object):
         #Weights (parameters)
         self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
         self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
+
+    def sigmoid(self, z):
+        # Apply sigmoid activation function to scalar, vector, or matrix
+        return 1/(1+np.exp(-z))
