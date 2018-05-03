@@ -19,8 +19,11 @@ class Neural_Network(object):
         #Weights (parameters)
         # np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
 
-        self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
-        self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
+        # self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
+        # self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
+
+        self.W1 = np.reshape(np.arange(6, dtype=np.float), (3, 2))
+        self.W2 = np.reshape(np.arange(3, dtype=np.float), (1, 3))
 
     def sigmoid(self, z):
         # Apply sigmoid activation function to scalar, vector, or matrix
@@ -43,7 +46,7 @@ class Neural_Network(object):
     def costFunction(self, X, y):
         # Compute cost for given X,y, use weights already stored in class.
         self.yHat = self.forward(X)
-        print(y)
+
         J = 0.5*np.sum((y-self.yHat)**2)
 
         return J
@@ -57,13 +60,14 @@ class Neural_Network(object):
 
         delta2 = np.dot(self.W2.T, delta3)*self.sigmoidPrime(self.z2)
 
-        dJdW1 = np.dot(X, delta2.T)
+        dJdW1 = np.dot(delta2, X.T)
 
         return dJdW1, dJdW2
 
     def getParams(self):
         # Get W1 and W2 unrolled into vector:
         params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+        print(params)
         return params
 
     def setParams(self, params):
@@ -111,7 +115,10 @@ def computeNumericalGradient(N, X, y):
 
 nn = Neural_Network()
 numgrad = computeNumericalGradient(nn, X, y)
-grad = nn.computeGradients(X, y)
 
-print(norm(grad-numgrad)/norm(grad+numgrad))
-# print(nn.costFunction(X, y))
+grad = nn.computeGradients(X, y)
+print(grad-numgrad)
+print(np.linalg.linalg.norm(grad-numgrad)/np.linalg.linalg.norm(grad+numgrad))
+
+# a, b = nn.costFunctionPrime(X, y)
+# print(a, b)
