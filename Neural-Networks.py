@@ -42,4 +42,4 @@ class Neural_Network(object):
 
 
 nn = Neural_Network()
-nn.forward(X)
+print(nn.costFunction(X, y))
