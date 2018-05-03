@@ -1,7 +1,7 @@
 import numpy as np
 
 # X = (sleeping hours,studying hours), y = test score
-X = np.array(([3, 5], [5, 1], [10, 2]), dtype=float)
+X = np.array(([3, 5, 10], [5, 1, 2]), dtype=float)
 y = np.array(([75], [82], [93]), dtype=float)
 
 # Normalize
@@ -39,3 +39,7 @@ class Neural_Network(object):
         self.yHat = self.forward(X)
         J = 0.5*sum((y-self.yHat)**2)
         return J
+
+
+nn = Neural_Network()
+nn.forward(X)
