@@ -8,8 +8,6 @@ y = np.array(([75, 82, 93]), dtype=float)
 X = X/np.amax(X, axis=1).reshape(2, 1)
 y = y/100  # Max score is 100
 
-# Whole Class with additions:
-
 
 class Neural_Network(object):
     def __init__(self):
@@ -21,8 +19,8 @@ class Neural_Network(object):
         #Weights (parameters)
         # np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
 
-        self.W1 = np.reshape(np.arange(6, dtype=np.float), (3, 2))
-        self.W2 = np.reshape(np.arange(3, dtype=np.float), (1, 3))
+        self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
+        self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
 
     def sigmoid(self, z):
         # Apply sigmoid activation function to scalar, vector, or matrix
@@ -45,7 +43,9 @@ class Neural_Network(object):
     def costFunction(self, X, y):
         # Compute cost for given X,y, use weights already stored in class.
         self.yHat = self.forward(X)
-        J = 0.5*sum((y-self.yHat)**2)
+        print(y)
+        J = 0.5*np.sum((y-self.yHat)**2)
+
         return J
 
     def costFunctionPrime(self, X, y):
@@ -61,8 +61,57 @@ class Neural_Network(object):
 
         return dJdW1, dJdW2
 
+    def getParams(self):
+        # Get W1 and W2 unrolled into vector:
+        params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
+        return params
+
+    def setParams(self, params):
+        # Set W1 and W2 using single paramater vector.
+        W1_start = 0
+        W1_end = self.hiddenLayerSize * self.inputLayerSize
+        self.W1 = np.reshape(params[W1_start:W1_end],
+                             (self.hiddenLayerSize, self.inputLayerSize))
+
+        W2_end = W1_end + self.hiddenLayerSize*self.outputLayerSize
+        self.W2 = np.reshape(
+            params[W1_end:W2_end], (self.outputLayerSize, self.hiddenLayerSize))
+
+    def computeGradients(self, X, y):
+        dJdW1, dJdW2 = self.costFunctionPrime(X, y)
+        return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
+
+
+def computeNumericalGradient(N, X, y):
+    paramsInitial = N.getParams()
+    numgrad = np.zeros(paramsInitial.shape)
+    perturb = np.zeros(paramsInitial.shape)
+    e = 1e-4
+
+    for p in range(len(paramsInitial)):
+        # Set perturbation vector
+        perturb[p] = e
+        N.setParams(paramsInitial + perturb)
+        loss2 = N.costFunction(X, y)
+
+        N.setParams(paramsInitial - perturb)
+        loss1 = N.costFunction(X, y)
+
+        # Compute Numerical Gradient
+        numgrad[p] = (loss2 - loss1) / (2*e)
+
+        # Return the value we changed to zero:
+        perturb[p] = 0
+
+    # Return Params to original value:
+    N.setParams(paramsInitial)
+
+    return numgrad
+
 
 nn = Neural_Network()
-a, b = nn.costFunctionPrime(X, y)
-# print(nn.forward(X))
-print(a, b)
+numgrad = computeNumericalGradient(nn, X, y)
+grad = nn.computeGradients(X, y)
+
+print(norm(grad-numgrad)/norm(grad+numgrad))
+# print(nn.costFunction(X, y))
