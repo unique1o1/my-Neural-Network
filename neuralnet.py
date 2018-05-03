@@ -55,10 +55,9 @@ class Neural_Network(object):
         delta3 = np.multiply(-(y-self.yHat), self.sigmoidPrime(self.z3))
         dJdW2 = np.dot(delta3, self.a2.T)
 
-        delta2 = np.dot(delta3.T, self.W2)*self.sigmoidPrime(self.z2).T
-        print(delta2)
+        delta2 = np.dot(self.W2.T, delta3)*self.sigmoidPrime(self.z2)
 
-        dJdW1 = np.dot(X, delta2)
+        dJdW1 = np.dot(X, delta2.T)
 
         return dJdW1, dJdW2
 
