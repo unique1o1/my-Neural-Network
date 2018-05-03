@@ -33,3 +33,9 @@ class Neural_Network(object):
         self.z3 = np.dot(self.W2, self.a2)
         yHat = self.sigmoid(self.z3)
         return yHat
+
+    def costFunction(self, X, y):
+        # Compute cost for given X,y, use weights already stored in class.
+        self.yHat = self.forward(X)
+        J = 0.5*sum((y-self.yHat)**2)
+        return J
