@@ -1,5 +1,6 @@
 import numpy as np
 
+from scipy import optimize
 # X = (sleeping hours,studying hours), y = test score
 X = np.array(([3, 5, 10], [5, 1, 2]), dtype=float)
 y = np.array(([75, 82, 93]), dtype=float)
@@ -111,6 +112,45 @@ def computeNumericalGradient(N, X, y):
     N.setParams(paramsInitial)
 
     return numgrad
+
+
+class trainer(object):
+    def __init__(self, N):
+        # Make Local reference to network:
+        self.N = N
+        self.xx = 1
+
+    def callbackF(self, params):
+        #         if self.xx:
+        #             print(params)
+        #             self.xx=0
+
+        self.N.setParams(params)
+        self.J.append(self.N.costFunction(self.X, self.y))
+
+    def costFunctionWrapper(self, params, X, y):
+        self.N.setParams(params)
+        cost = self.N.costFunction(X, y)
+        grad = self.N.computeGradients(X, y)
+
+        return cost, grad
+
+    def train(self, X, y):
+        # Make an internal variable for the callback function:
+        self.X = X
+        self.y = y
+
+        # Make empty list to store costs:
+        self.J = []
+
+        params0 = self.N.getParams()
+
+        options = {'maxiter': 200, 'disp': True}
+        _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS',
+                                 args=(X, y), options=options, callback=self.callbackF)
+
+        self.N.setParams(_res.x)
+        self.optimizationResults = _res
 
 
 nn = Neural_Network()
