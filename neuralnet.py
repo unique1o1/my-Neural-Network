@@ -154,11 +154,7 @@ class trainer(object):
 
 
 nn = Neural_Network()
-numgrad = computeNumericalGradient(nn, X, y)
-
-grad = nn.computeGradients(X, y)
-print(grad-numgrad)
-print(np.linalg.linalg.norm(grad-numgrad)/np.linalg.linalg.norm(grad+numgrad))
-
-# a, b = nn.costFunctionPrime(X, y)
-# print(a, b)
+# nn.costFunctionPrime(X,y)
+t = trainer(nn)
+t.train(X, y)
+print(nn.forward(X))
