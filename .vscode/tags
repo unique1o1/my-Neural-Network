@@ -1,0 +1,29 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+Neural_Network	../neuralnet.py	/^class Neural_Network(object):$/;"	kind:class	line:13
+X	../neuralnet.py	/^X = X\/np.amax(X, axis=1).reshape(2, 1)$/;"	kind:variable	line:9
+X	../neuralnet.py	/^X = np.array(([3, 5, 10], [5, 1, 2]), dtype=float)$/;"	kind:variable	line:5
+__init__	../neuralnet.py	/^    def __init__(self):$/;"	kind:member	line:14
+__init__	../neuralnet.py	/^    def __init__(self, N):$/;"	kind:member	line:118
+callbackF	../neuralnet.py	/^    def callbackF(self, params):$/;"	kind:member	line:123
+computeGradients	../neuralnet.py	/^    def computeGradients(self, X, y):$/;"	kind:member	line:85
+computeNumericalGradient	../neuralnet.py	/^def computeNumericalGradient(N, X, y):$/;"	kind:function	line:90
+costFunction	../neuralnet.py	/^    def costFunction(self, X, y):$/;"	kind:member	line:47
+costFunctionPrime	../neuralnet.py	/^    def costFunctionPrime(self, X, y):$/;"	kind:member	line:55
+costFunctionWrapper	../neuralnet.py	/^    def costFunctionWrapper(self, params, X, y):$/;"	kind:member	line:131
+forward	../neuralnet.py	/^    def forward(self, X):$/;"	kind:member	line:33
+getParams	../neuralnet.py	/^    def getParams(self):$/;"	kind:member	line:68
+neuralnet.py	../neuralnet.py	1;"	kind:file	line:1
+nn	../neuralnet.py	/^nn = Neural_Network()$/;"	kind:variable	line:156
+setParams	../neuralnet.py	/^    def setParams(self, params):$/;"	kind:member	line:74
+sigmoid	../neuralnet.py	/^    def sigmoid(self, z):$/;"	kind:member	line:29
+sigmoidPrime	../neuralnet.py	/^    def sigmoidPrime(self, z):$/;"	kind:member	line:43
+t	../neuralnet.py	/^t = trainer(nn)$/;"	kind:variable	line:158
+train	../neuralnet.py	/^    def train(self, X, y):$/;"	kind:member	line:138
+trainer	../neuralnet.py	/^class trainer(object):$/;"	kind:class	line:117
+y	../neuralnet.py	/^y = np.array(([75, 82, 93]), dtype=float)$/;"	kind:variable	line:6
+y	../neuralnet.py	/^y = y\/100  # Max score is 100$/;"	kind:variable	line:10

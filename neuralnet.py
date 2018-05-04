@@ -1,8 +1,8 @@
 import numpy as np
-
+import matplotlib.pyplot as plt
 from scipy import optimize
 # X = (sleeping hours,studying hours), y = test score
-X = np.array(([3, 5, 10], [5, 1, 2]), dtype=float)
+X = np.array(([3, 5, 10, 6], [5, 1, 2, 1.5]), dtype=float)
 y = np.array(([75, 82, 93]), dtype=float)
 
 # Normalize
@@ -20,11 +20,11 @@ class Neural_Network(object):
         #Weights (parameters)
         # np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
 
-        # self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
-        # self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
+        self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
+        self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
 
-        self.W1 = np.reshape(np.arange(6, dtype=np.float), (3, 2))
-        self.W2 = np.reshape(np.arange(3, dtype=np.float), (1, 3))
+        # self.W1 = np.reshape(np.arange(6, dtype=np.float), (3, 2))
+        # self.W2 = np.reshape(np.arange(3, dtype=np.float), (1, 3))
 
     def sigmoid(self, z):
         # Apply sigmoid activation function to scalar, vector, or matrix
@@ -68,7 +68,7 @@ class Neural_Network(object):
     def getParams(self):
         # Get W1 and W2 unrolled into vector:
         params = np.concatenate((self.W1.ravel(), self.W2.ravel()))
-        print(params)
+
         return params
 
     def setParams(self, params):
@@ -84,6 +84,7 @@ class Neural_Network(object):
 
     def computeGradients(self, X, y):
         dJdW1, dJdW2 = self.costFunctionPrime(X, y)
+
         return np.concatenate((dJdW1.ravel(), dJdW2.ravel()))
 
 
@@ -152,9 +153,86 @@ class trainer(object):
         self.N.setParams(_res.x)
         self.optimizationResults = _res
 
+# numerical gradient checking
+# nn = Neural_Network()
+# numgrad = computeNumericalGradient(nn, X, y)
 
-nn = Neural_Network()
-# nn.costFunctionPrime(X,y)
-t = trainer(nn)
-t.train(X, y)
-print(nn.forward(X))
+# grad = nn.computeGradients(X, y)
+# print(grad-numgrad)
+# print(np.linalg.linalg.norm(grad-numgrad)/np.linalg.linalg.norm(grad+numgrad))
+
+# a, b = nn.costFunctionPrime(X, y)
+# print(a, b)
+
+
+
+# Training Data:
+trainX = np.array(([3, 5, 10, 6], [5, 1, 2, 1.5]), dtype=float)
+trainY = np.array(([75, 82, 93, 70]), dtype=float)
+
+# Testing Data:
+testX = np.array(([4, 4.5, 9, 6], [5, 1, 2.5, 2]), dtype=float)
+testY = np.array(([65, 89, 85, 75]), dtype=float)
+
+# Normalize:
+
+# Normalize
+trainX = trainX/np.amax(trainX, axis=1).reshape(2, 1)
+trainY = trainY/100  # Max score is 100
+
+# Normalize:
+testX = testX/np.array([[10.], [5.]])
+
+testY = testY/100  # Max test score is 100
+
+
+# Modify trainer class to check testing error during training:
+class trainer_test(object):
+    def __init__(self, N):
+        # Make Local reference to network:
+        self.N = N
+
+    def callbackF(self, params):
+        self.N.setParams(params)
+        self.J.append(self.N.costFunction(self.X, self.y))
+        self.testJ.append(self.N.costFunction(self.testX, self.testY))
+
+    def costFunctionWrapper(self, params, X, y):
+        self.N.setParams(params)
+        cost = self.N.costFunction(X, y)
+        grad = self.N.computeGradients(X, y)
+        return cost, grad
+
+    def train(self, trainX, trainY, testX, testY):
+        # Make an internal variable for the callback function:
+        self.X = trainX
+        self.y = trainY
+
+        self.testX = testX
+        self.testY = testY
+
+        # Make empty list to store costs:
+        self.J = []
+        self.testJ = []
+
+        params0 = self.N.getParams()
+
+        options = {'maxiter': 200, 'disp': True}
+        _res = optimize.minimize(self.costFunctionWrapper, params0, jac=True, method='BFGS',
+                                 args=(trainX, trainY), options=options, callback=self.callbackF)
+
+        self.N.setParams(_res.x)
+        self.optimizationResults = _res
+
+
+# Train network with new data:
+NN = Neural_Network()
+T = trainer_test(NN)
+T.train(trainX, trainY, testX, testY)
+plt.plot(T.J, linewidth=6)
+plt.plot(T.testJ)
+plt.grid(1)
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.show()
+print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
