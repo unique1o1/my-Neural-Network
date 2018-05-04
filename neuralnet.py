@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from scipy import optimize
 # X = (sleeping hours,studying hours), y = test score
 X = np.array(([3, 5, 10, 6], [5, 1, 2, 1.5]), dtype=float)
-y = np.array(([75, 82, 93]), dtype=float)
+y = np.array(([75, 82, 93, 70]), dtype=float)
 
 # Normalize
 X = X/np.amax(X, axis=1).reshape(2, 1)
@@ -22,7 +22,7 @@ class Neural_Network(object):
 
         self.W1 = np.random.randn(self.hiddenLayerSize, self.inputLayerSize)
         self.W2 = np.random.randn(self.outputLayerSize, self.hiddenLayerSize)
-
+        self.Lambda = 0.001
         # self.W1 = np.reshape(np.arange(6, dtype=np.float), (3, 2))
         # self.W2 = np.reshape(np.arange(3, dtype=np.float), (1, 3))
 
@@ -48,8 +48,9 @@ class Neural_Network(object):
         # Compute cost for given X,y, use weights already stored in class.
         self.yHat = self.forward(X)
 
-        J = 0.5*np.sum((y-self.yHat)**2)
-
+        J = 0.5*np.sum((y-self.yHat)**2) / \
+            X.shape[0] + (self.Lambda/2) * \
+            (np.sum(self.W1**2)+np.sum(self.W2**2))
         return J
 
     def costFunctionPrime(self, X, y):
@@ -57,11 +58,11 @@ class Neural_Network(object):
         self.yHat = self.forward(X)
 
         delta3 = np.multiply(-(y-self.yHat), self.sigmoidPrime(self.z3))
-        dJdW2 = np.dot(delta3, self.a2.T)
+        dJdW2 = np.dot(delta3, self.a2.T)/X.shape[1] + self.Lambda*self.W2
 
         delta2 = np.dot(self.W2.T, delta3)*self.sigmoidPrime(self.z2)
 
-        dJdW1 = np.dot(delta2, X.T)
+        dJdW1 = np.dot(delta2, X.T)/X.shape[1] + self.Lambda*self.W1
 
         return dJdW1, dJdW2
 
@@ -227,24 +228,27 @@ class trainer_test(object):
 
 
 # Train network with new data:
-# NN = Neural_Network()
-# T = trainer_test(NN)
-# T.train(trainX, trainY, testX, testY)
-# plt.plot(T.J, linewidth=6)
-# plt.plot(T.testJ)
-# plt.grid(1)
-# plt.xlabel('Iterations')
-# plt.ylabel('Cost')
-# plt.show()
-# print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
-
-
-
-#best weight for lowest cost function for test data--------[2.92283085,   2.26309647, 15.40567647, -39.72529278,  10.15396877,
-            #   13.87667802,  11.80661059,   3.27781238, -10.21810612]
-
 NN = Neural_Network()
-NN.setParams([2.92283085,   2.26309647, 15.40567647, -39.72529278,  10.15396877,
-              13.87667802,  11.80661059,   3.27781238, -10.21810612]
-             )
-print(NN.forward(np.array([[10.], [4.]])/np.array([[10.], [5.]])))
+
+T = trainer_test(NN)
+
+T.train(trainX, trainY, testX, testY)
+plt.plot(T.J, linewidth=6)
+plt.plot(T.testJ)
+plt.grid(1)
+plt.xlabel('Iterations')
+plt.ylabel('Cost')
+plt.show()
+print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
+
+
+# best weight for lowest cost function for test data--------[ 0.1977928  -0.0625821   0.73122814 -0.10796751  0.40894123  0.01463633
+#   0.49792095  1.11995794  0.78996266]
+
+
+
+# NN = Neural_Network()
+# NN.setParams([2.92283085,   2.26309647, 15.40567647, -39.72529278,  10.15396877,
+#               13.87667802,  11.80661059,   3.27781238, -10.21810612]
+#              )
+# print(NN.forward(np.array([[10.], [4.]])/np.array([[10.], [5.]])))
