@@ -222,17 +222,29 @@ class trainer_test(object):
                                  args=(trainX, trainY), options=options, callback=self.callbackF)
 
         self.N.setParams(_res.x)
+        print(_res.x)
         self.optimizationResults = _res
 
 
 # Train network with new data:
+# NN = Neural_Network()
+# T = trainer_test(NN)
+# T.train(trainX, trainY, testX, testY)
+# plt.plot(T.J, linewidth=6)
+# plt.plot(T.testJ)
+# plt.grid(1)
+# plt.xlabel('Iterations')
+# plt.ylabel('Cost')
+# plt.show()
+# print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
+
+
+
+#best weight for lowest cost function for test data--------[2.92283085,   2.26309647, 15.40567647, -39.72529278,  10.15396877,
+            #   13.87667802,  11.80661059,   3.27781238, -10.21810612]
+
 NN = Neural_Network()
-T = trainer_test(NN)
-T.train(trainX, trainY, testX, testY)
-plt.plot(T.J, linewidth=6)
-plt.plot(T.testJ)
-plt.grid(1)
-plt.xlabel('Iterations')
-plt.ylabel('Cost')
-plt.show()
-print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
+NN.setParams([2.92283085,   2.26309647, 15.40567647, -39.72529278,  10.15396877,
+              13.87667802,  11.80661059,   3.27781238, -10.21810612]
+             )
+print(NN.forward(np.array([[10.], [4.]])/np.array([[10.], [5.]])))
