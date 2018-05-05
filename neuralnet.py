@@ -7,8 +7,7 @@ y = np.array(([75, 82, 93, 70]), dtype=float)
 
 # Normalize
 X = X/np.amax(X, axis=1).reshape(2, 1)
-y = y/100  # Max score is 100
-
+y = y/100  
 
 class Neural_Network(object):
     def __init__(self):
