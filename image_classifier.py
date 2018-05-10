@@ -3,6 +3,7 @@ from keras.models import Sequential
 from keras.datasets import mnist
 from keras.utils import to_categorical
 import numpy as np
+import cv2
 
 import matplotlib.pyplot as plt
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
@@ -36,3 +37,11 @@ plt.plot(history.history['val_acc'], 'b-')
 
 plt.plot(history.history['loss'], 'r-')
 plt.xlim(0, 4)
+
+tr = cv2.imread('train1.png', 0)
+tr = cv2.resize(tr, (28, 28))
+tr = tr.astype('float32')
+t = tr/255
+t = t.flatten()
+t = np.array([t])
+print(cnn.predict(t).argmax())
