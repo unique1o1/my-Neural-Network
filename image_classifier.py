@@ -6,7 +6,8 @@ from keras.models import load_model
 import numpy as np
 import cv2
 import sys
-
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 # import matplotlib.pyplot as plt
 # (X_train, y_train), (X_test, y_test) = mnist.load_data()
 # num_classes = 10
