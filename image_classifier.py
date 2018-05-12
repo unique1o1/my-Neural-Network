@@ -1,21 +1,24 @@
-from keras.layers import Dense
+#%%
+from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
 from keras.models import Sequential
 from keras.datasets import mnist
 from keras.utils import to_categorical
 from keras.models import load_model
 import numpy as np
-import cv2
+
 import sys
 import os
 import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+#%%
 if not sys.argv.__len__() >= 2:
     (X_train, y_train), (X_test, y_test) = mnist.load_data()
     num_classes = 10
     epochs = 5
 
     X_train = X_train.reshape(60000, 28*28)
+
     X_test = X_test.reshape(10000, 28*28)
 
     X_train = X_train.astype('float32')
@@ -43,13 +46,32 @@ if not sys.argv.__len__() >= 2:
 
     plt.plot(history.history['loss'], 'r-')
     plt.xlim(0, 4)
-else:
-    model = load_model('classifier.h5')
 
-    tr = cv2.imread(sys.argv[1], 0)
-    tr = cv2.resize(tr, (28, 28))
+else:
+    from PIL import Image
+    model = load_model('classifier.h5')
+#%%
+    tr = Image.open('train1.png').convert('L')
+    tr = tr.resize((28, 28))
+    tr = np.array(tr.getdata())
+
     tr = tr.astype('float32')
     t = tr/255
-    t = t.flatten()
+
     t = np.array([t])
+
     print(model.predict(t).argmax())
+
+    plt.plot(np.arange(-10, 10), np.arange(-10, 10)**2)
+
+#%%
+cnn = Sequential()
+cnn.add(Conv2D(32, kernel_size=(5, 5), input_shape=(
+    28, 28, 1), padding='same', activation='relu'))
+cnn.add(MaxPooling2D())
+cnn.add(Conv2D(64, kernel_size=(5, 5), padding='same', activation='relu'))
+cnn.add(Flatten())
+cnn.add(Dense(1024, activation='relu'))
+cnn.add(Dense(10, activation='softmax'))
+cnn.compile('adam', loss='categorical_crossentropy', metrics=['accuracy'])
+cnn.summary()
