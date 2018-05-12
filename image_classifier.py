@@ -1,9 +1,9 @@
 #%%
 from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
-from keras.models import Sequential
+from keras.models import Sequential, load_model
 from keras.datasets import mnist
 from keras.utils import to_categorical
-from keras.models import load_model
+
 import numpy as np
 
 from PIL import Image
@@ -23,7 +23,7 @@ def preprocess():
     epochs = 5
 
     X_train = X_train.reshape(60000, 28, 28, 1)
-    X_train
+
     X_test = X_test.reshape(10000, 28, 28, 1)
 
     X_train = X_train.astype('float32')
@@ -59,6 +59,7 @@ if not sys.argv.__len__() >= 2:
     plt.xlim(0, 4)
 #%%
 else:
+    # testing simple neutral network
     model = load_model('classifier.h5')
 
     tr = Image.open('train1.png').convert('L')
@@ -82,9 +83,25 @@ cnn.add(Conv2D(32, kernel_size=(5, 5), input_shape=(
     28, 28, 1), padding='same', activation='relu'))
 cnn.add(MaxPooling2D())
 cnn.add(Conv2D(64, kernel_size=(5, 5), padding='same', activation='relu'))
+cnn.add(MaxPooling2D())
 cnn.add(Flatten())
 cnn.add(Dense(1024, activation='relu'))
 cnn.add(Dense(10, activation='softmax'))
 cnn.compile('adam', loss='categorical_crossentropy', metrics=['accuracy'])
 cnn.summary()
 his = cnn.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=5)
+
+# testing CNN model
+#%%
+
+cnn.load_weights('cnn-model5.h5')
+#%%
+tr = Image.open('train4.png').convert('L')
+tr = tr.resize((28, 28))
+tr = np.array(tr.getdata())
+tr.resize(1, 28, 28, 1)
+tr
+tr = tr.astype('float32')
+t = tr/255
+
+print(cnn.predict(t).argmax())
