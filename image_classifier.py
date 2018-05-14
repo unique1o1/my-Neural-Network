@@ -73,7 +73,6 @@ else:
 
     print(model.predict(t).argmax())
 
-    plt.plot(np.arange(-10, 10), np.arange(-10, 10)**2)
 
 #%%
 
@@ -94,9 +93,9 @@ his = cnn.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=5)
 # testing CNN model
 #%%
 
-cnn.load_weights('cnn-model5.h5')
+cnn.load_weights('cnn-model4.h5')
 #%%
-tr = Image.open('train4.png').convert('L')
+tr = Image.open('train6.png').convert('L')
 tr = tr.resize((28, 28))
 tr = np.array(tr.getdata())
 tr.resize(1, 28, 28, 1)
