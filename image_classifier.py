@@ -1,4 +1,4 @@
-#%%
+# %%
 from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten
 from keras.models import Sequential, load_model
 from keras.datasets import mnist
@@ -13,7 +13,7 @@ import os
 import matplotlib.pyplot as plt
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-#%%
+# %%
 
 
 def preprocess():
@@ -36,8 +36,7 @@ def preprocess():
     return (X_train, y_train, X_test, y_test)
 
 
-sys.argv.__len__()
-#%%
+# %%
 if not sys.argv.__len__() >= 2:
     (X_train, y_train, X_test, y_test) = preprocess()
     model = Sequential()
@@ -57,7 +56,7 @@ if not sys.argv.__len__() >= 2:
 
     plt.plot(history.history['loss'], 'r-')
     plt.xlim(0, 4)
-#%%
+# %%
 else:
     # testing simple neutral network
     model = load_model('classifier.h5')
@@ -74,9 +73,9 @@ else:
     print(model.predict(t).argmax())
 
 
-#%%
+# %%
 
-(X_train, y_train, X_test, y_test) = preprocess()
+# (X_train, y_train, X_test, y_test) = preprocess()
 cnn = Sequential()
 cnn.add(Conv2D(32, kernel_size=(5, 5), input_shape=(
     28, 28, 1), padding='same', activation='relu'))
@@ -88,18 +87,22 @@ cnn.add(Dense(1024, activation='relu'))
 cnn.add(Dense(10, activation='softmax'))
 cnn.compile('adam', loss='categorical_crossentropy', metrics=['accuracy'])
 cnn.summary()
-his = cnn.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=5)
+model_json = cnn.to_json()
+with open("model.json", "w") as json_file:
+    json_file.write(model_json)
+    print('asdf')
+# his = cnn.fit(X_train, y_train, validation_data=(X_test, y_test), epochs=5)
 
 # testing CNN model
-#%%
+# %%
 
-cnn.load_weights('cnn-model4.h5')
-#%%
+cnn.load_weights('weight_cnn.h5')
+# %%
 tr = Image.open('train6.png').convert('L')
 tr = tr.resize((28, 28))
 tr = np.array(tr.getdata())
 tr.resize(1, 28, 28, 1)
-tr
+
 tr = tr.astype('float32')
 t = tr/255
 
