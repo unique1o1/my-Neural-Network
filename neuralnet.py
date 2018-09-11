@@ -7,7 +7,8 @@ y = np.array(([75, 82, 93, 70]), dtype=float)
 
 # Normalize
 X = X/np.amax(X, axis=1).reshape(2, 1)
-y = y/100  
+y = y/100
+
 
 class Neural_Network(object):
     def __init__(self):
@@ -232,9 +233,10 @@ NN = Neural_Network()
 T = trainer_test(NN)
 
 T.train(trainX, trainY, testX, testY)
-plt.plot(T.J, linewidth=6)
-plt.plot(T.testJ)
+plt.plot(T.J, linewidth=6, label='train')
+plt.plot(T.testJ, label='test')
 plt.grid(1)
+plt.legend()
 plt.xlabel('Iterations')
 plt.ylabel('Cost')
 plt.show()
@@ -243,7 +245,6 @@ print(NN.forward(np.array([[6.], [4.]])/np.array([[10.], [5.]])))
 
 # best weight for lowest cost function for test data--------[ 0.1977928  -0.0625821   0.73122814 -0.10796751  0.40894123  0.01463633
 #   0.49792095  1.11995794  0.78996266]
-
 
 
 # NN = Neural_Network()
