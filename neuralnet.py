@@ -54,7 +54,7 @@ class Neural_Network(object):
         return J
 
     def costFunctionPrime(self, X, y):
-        # Compute derivative with respect to W and W2 for a given X and y:
+        # Compute derivative with respect to W1 and W2 for a given X and y:
         self.yHat = self.forward(X)
 
         delta3 = np.multiply(-(y-self.yHat), self.sigmoidPrime(self.z3))
